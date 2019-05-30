@@ -10,6 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import sun.awt.image.ImageWatched;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,5 +63,12 @@ public class ProductCategoryRepositoryTest {
         else {
             System.out.println("没有对应id数据");
         }
+    }
+
+    @Test
+    public  void findByCategoryTypeIn(){
+        List<Integer> list = Arrays.asList(1,2,3,5);
+        List<ProductCategory> result = repository.findByCategoryTypeIn(list);
+        Assert.assertNotEquals(0,result.size());
     }
 }
