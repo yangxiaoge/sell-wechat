@@ -1,28 +1,23 @@
-package com.bruceyang.sell.dao;
+package com.bruceyang.sell.dto;
 
+import com.bruceyang.sell.dao.OrderDetail;
 import com.bruceyang.sell.enums.OrderStatusEnum;
 import com.bruceyang.sell.enums.PayStatusEnum;
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by yangxiaoge
- * 2019/5/30 18:33
- * 订单表:order_master
+ * 2019/5/31 10:55
  */
-@Entity
 @Data
-@DynamicUpdate
-public class OrderMaster {
+public class OrderDTO {
     /**
      * 订单id
      */
-    @Id
     private String orderId;
     /**
      * 卖家名字
@@ -48,11 +43,11 @@ public class OrderMaster {
     /**
      * 订单状态，默认0新下单
      */
-    private Integer orderStatus = OrderStatusEnum.NEW.getCode();
+    private Integer orderStatus  ;
     /**
      * 支付状态,默认0未支付
      */
-    private Integer payStatus = PayStatusEnum.WAIT.getCode();
+    private Integer payStatus ;
 
     /**
      * 创建时间
@@ -63,5 +58,6 @@ public class OrderMaster {
      */
     private Date updateTime;
 
+    List<OrderDetail> orderDetailList;
 
 }

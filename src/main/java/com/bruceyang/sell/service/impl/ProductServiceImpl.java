@@ -1,7 +1,10 @@
 package com.bruceyang.sell.service.impl;
 
 import com.bruceyang.sell.dao.ProductInfo;
+import com.bruceyang.sell.dto.CartDTO;
 import com.bruceyang.sell.enums.ProductStatusEnum;
+import com.bruceyang.sell.enums.ResultEnum;
+import com.bruceyang.sell.exception.SellException;
 import com.bruceyang.sell.repository.ProductInfoRepository;
 import com.bruceyang.sell.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,5 +48,32 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductInfo save(ProductInfo productInfo) {
         return repository.save(productInfo);
+    }
+
+    @Override
+    public void increaseStock(List<CartDTO> cartDTOList) {
+
+    }
+
+    @Override
+    @Transactional
+    public void decreaseStock(List<CartDTO> cartDTOList) {
+        for (CartDTO cartDTO : cartDTOList) {
+            ProductInfo qryProductInfo = new ProductInfo();
+            qryProductInfo.setProductId(cartDTO.getProductId());
+            Example<ProductInfo> example = Example.of(qryProductInfo);
+            Optional<ProductInfo> optional = repository.findOne(example);
+            if (optional.isPresent()) {
+                ProductInfo productInfo = optional.get();
+                int result = productInfo.getProductStock() - cartDTO.getProductQuantity();
+                if (result < 0) {
+                    throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+                }
+                productInfo.setProductStock(result);
+                repository.save(productInfo);
+            } else {
+                throw new SellException(ResultEnum.PRODUCT_STOCK_ERROR);
+            }
+        }
     }
 }
