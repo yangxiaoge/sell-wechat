@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Created by yangxiaoge
  * 2019/5/31 10:55
+ * DESC:订单信息 - 只返回部分数据给前端
  */
 @Data
 public class OrderDTO {
